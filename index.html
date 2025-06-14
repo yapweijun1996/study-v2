@@ -102,6 +102,30 @@
       transform: scale(1.02);
       transition: transform 0.15s;
     }
+    /* Placeholder card styles */
+    .placeholder-card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .placeholder-line {
+      height: 1rem;
+      background: #e4e4e4;
+      border-radius: 4px;
+      animation: placeholderPulse 1.5s ease-in-out infinite;
+    }
+    .placeholder-line.short { width: 60%; }
+    .placeholder-line.medium { width: 80%; }
+    .placeholder-line.long { width: 100%; }
+    @keyframes placeholderPulse {
+      0% { background-color: #eee; }
+      50% { background-color: #ddd; }
+      100% { background-color: #eee; }
+    }
     .card-chevron {
       position: absolute;
       right: 1.2rem;
@@ -670,7 +694,10 @@
       </label>
       <label class="block mb-3">
         <span class="text-sm font-medium">Voice</span>
-        <select id="voiceSelect" class="w-full mt-1 px-2 py-1 border rounded"></select>
+        <div class="flex items-center gap-2 mt-1">
+          <select id="voiceSelect" class="flex-1 px-2 py-1 border rounded"></select>
+          <button id="testVoiceBtn" class="px-2 py-1 rounded bg-gray-200">Test voice</button>
+        </div>
       </label>
       <div class="flex justify-end gap-2 mt-6">
         <button id="cancelBtn" class="px-3 py-1 rounded bg-gray-200">Cancel</button>
@@ -750,6 +777,20 @@
         selectedModel = modelSelect.value;
         localStorage.setItem('geminiModel', selectedModel);
       };
+
+      function showPlaceholders(count = CARDS_BATCH_SIZE) {
+        cardList.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+          const ph = document.createElement('div');
+          ph.className = 'placeholder-card';
+          ph.innerHTML = `
+            <div class="placeholder-line short"></div>
+            <div class="placeholder-line medium"></div>
+            <div class="placeholder-line long"></div>
+          `;
+          cardList.appendChild(ph);
+        }
+      }
 
       // Gemini API config
       const generationConfig = {
@@ -901,6 +942,13 @@
         localStorage.setItem('selectedVoice', e.target.value);
       });
 
+      const testBtn = document.getElementById('testVoiceBtn');
+      if (testBtn) {
+        testBtn.addEventListener('click', () => {
+          speakWord('This is a test of the selected voice.', 'en-US');
+        });
+      }
+
       function pickVoice(langCode) {
         const prefix = langCode.split('-')[0];
         const list = voiceMap[prefix] || [];
@@ -1026,7 +1074,7 @@
         // Extract pinyin if present in parentheses
         const pinyinMatch = toExample.match(/[（(]([^）)]+)[）)]/);
         const toText = toExample.replace(/[（(][^）)]+[）)]/g, '').trim();
-        const ttsTo = `<button class="tts-btn" data-sentence="${toText.replace(/"/g,'&quot;')}" data-lang="${toLang==='en'?'en-US':'zh-CN'}" title="Read example">��</button>`;
+        const ttsTo = `<button class="tts-btn" data-sentence="${toText.replace(/"/g,'&quot;')}" data-lang="${toLang==='en'?'en-US':'zh-CN'}" title="Read example">🔊</button>`;
         const pinyinHtml = pinyinMatch ? `<div class="pinyin">（${pinyinMatch[1]}）</div>` : '';
         const examplesHtml = `
           <div id="examplesSection">
@@ -1206,6 +1254,7 @@
         // Use only the #loader element for loading indication
         const loaderEl = document.getElementById('loader');
         loaderEl.classList.remove('hidden');
+        if (!append) showPlaceholders();
         // Compose prompt for Gemini
         const prompt = `Generate a list of 10 English words with their Chinese translations, IPA pronunciations, definitions, and example sentences in both languages. Format as a JSON array with keys: en, zh, en_pron, zh_pron, en_def, zh_def, en_example, zh_example.`;
         try {
