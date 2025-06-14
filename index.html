@@ -330,13 +330,23 @@
       justify-content: center;
       z-index: 1000;
     }
-    .ai-toolbar > div {
-      padding: var(--space-md) var(--space-lg);
-    }
-    .difficulty-chip {
-      position: absolute;
-      top: var(--space-xs);
-      right: var(--space-xs);
+  .ai-toolbar > div {
+    padding: var(--space-md) var(--space-lg);
+  }
+  .toolbar-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #3852e2;
+    cursor: pointer;
+  }
+  .difficulty-chip {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
       font-size: 0.8rem;
     }
     .pinyin { font-style: italic; color: #666; }
@@ -634,7 +644,11 @@
       <button id="menuBtn" aria-label="Menu" class="menu-btn" aria-controls="mobileNav" aria-expanded="false">☰</button>
     </div>
   </header>
-  <section class="ai-toolbar" aria-label="AI Controls"></section>
+  <section class="ai-toolbar" aria-label="AI Controls">
+    <div>
+      <button id="toolbarCloseBtn" class="toolbar-close" aria-label="Close toolbar">&times;</button>
+    </div>
+  </section>
   <div id="toolbarBackdrop" class="toolbar-backdrop"></div>
   <main class="container">
     <section class="card-list" id="cardList"></section>
@@ -1333,11 +1347,25 @@
       // Toggle mobile toolbar bottom sheet with backdrop
       const menuBtnEl = document.getElementById('menuBtn');
       const backdropEl = document.getElementById('toolbarBackdrop');
+      const closeToolbarBtn = document.getElementById('toolbarCloseBtn');
       if (menuBtnEl) {
         menuBtnEl.addEventListener('click', () => {
           const sheet = document.querySelector('.ai-toolbar');
-          sheet.classList.toggle('open');
-          backdropEl.classList.toggle('open');
+          const isOpen = sheet.classList.toggle('open');
+          backdropEl.classList.toggle('open', isOpen);
+          if (isOpen) {
+            closeToolbarBtn.focus();
+          } else {
+            menuBtnEl.focus();
+          }
+        });
+      }
+      if (closeToolbarBtn) {
+        closeToolbarBtn.addEventListener('click', () => {
+          const sheet = document.querySelector('.ai-toolbar');
+          sheet.classList.remove('open');
+          backdropEl.classList.remove('open');
+          menuBtnEl.focus();
         });
       }
       // Close on backdrop tap
