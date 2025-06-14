@@ -629,9 +629,10 @@
     </div>
     <nav id="mainNav" class="main-nav" aria-label="Main navigation">
       <ul class="nav-list">
-        <li><a href="#" class="nav-link">Home</a></li>
+        <li><a href="#" id="homeLink" class="nav-link">Home</a></li>
         <li><a href="#" class="nav-link">About</a></li>
         <li><a href="#" class="nav-link">Contact</a></li>
+        <li><a href="#" id="savedLink" class="nav-link">Saved</a></li>
       </ul>
     </nav>
     <div class="topbar-actions">
@@ -666,9 +667,10 @@
   <!-- Mobile nav drawer -->
   <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation" hidden>
     <ul class="mobile-nav-list">
-      <li><a href="#" class="mobile-nav-link">Home</a></li>
+      <li><a href="#" id="homeLinkMobile" class="mobile-nav-link">Home</a></li>
       <li><a href="#" class="mobile-nav-link">About</a></li>
       <li><a href="#" class="mobile-nav-link">Contact</a></li>
+      <li><a href="#" id="savedLinkMobile" class="mobile-nav-link">Saved</a></li>
     </ul>
   </nav>
 
@@ -781,6 +783,29 @@
     const modalBg = document.getElementById('modalBg');
     const modalContent = document.getElementById('modalContent');
       const modelSelect = document.getElementById('modelSelect');
+
+      // Saved words helpers
+      const STORAGE_KEY = 'savedWords';
+      function getSavedWords() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        } catch (e) {
+          return [];
+        }
+      }
+      function saveWord(word) {
+        const list = getSavedWords();
+        if (!list.some(w => w.en === word.en && w.zh === word.zh)) {
+          list.push(word);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        }
+      }
+      function removeSavedWord(word) {
+        let list = getSavedWords();
+        list = list.filter(w => !(w.en === word.en && w.zh === word.zh));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      }
+      let currentView = 'all';
 
       // Initialize model and API key input
       modelSelect.value = selectedModel;
@@ -900,18 +925,55 @@
           e.stopPropagation();
             speakWord(e.currentTarget.dataset.sentence, e.currentTarget.dataset.lang);
         };
-          card.querySelector('.save-btn').onclick = (e)=>{e.stopPropagation(); alert('Saved!');};
+          card.querySelector('.save-btn').onclick = (e)=>{e.stopPropagation(); saveWord(word); alert('Saved!');};
         card.onclick = () => openModal(word, idx);
           card.tabIndex = 0;
         cardList.appendChild(card);
         });
         // If more cards to load, add a sentinel div for scroll detection
-        if (cardsToShow < vocabData.length) {
-          let sentinel = document.createElement('div');
-          sentinel.id = 'cardSentinel';
-          sentinel.style.height = '32px';
-          cardList.appendChild(sentinel);
+      if (cardsToShow < vocabData.length) {
+        let sentinel = document.createElement('div');
+        sentinel.id = 'cardSentinel';
+        sentinel.style.height = '32px';
+        cardList.appendChild(sentinel);
+      }
+    }
+
+      function renderSavedWords() {
+        const saved = getSavedWords();
+        cardList.innerHTML = '';
+        if (saved.length === 0) {
+          cardList.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">No saved words.</div>';
+          return;
         }
+        saved.forEach((word, idx) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const pronWord = fromLang === 'en' ? word.en : word.zh;
+          const pronLang = fromLang === 'en' ? 'en-US' : 'zh-CN';
+          const levelColor = selectedLevel==='easy'?'🟢':(selectedLevel==='medium'?'🟠':'🔴');
+          card.innerHTML = `
+            <div class="word-row">
+              <span>${word[fromLang]}</span>
+              <button class="pronounce-btn" data-word="${pronWord}" data-lang="${pronLang}" title="Pronounce">🔊</button>
+            </div>
+            <div style="font-size:1rem;color:#3852e2;">
+              ${word[toLang]}
+            </div>
+            <div style="font-size:0.98rem;color:#444;display:flex;align-items:center;gap:0.5rem;">
+              <b>Example:</b> ${word[fromLang + '_example']}
+              <button class="tts-btn" data-sentence="${word[fromLang + '_example'].replace(/"/g, '&quot;')}" data-lang="${fromLang === 'en' ? 'en-US' : 'zh-CN'}" title="Read example" style="background:#e4eafd;border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;">🔊</button>
+              <button class="remove-btn" title="Remove word" style="background:none;border:none;font-size:1.1rem;cursor:pointer;">✖</button>
+            </div>
+            <span class="card-chevron">&#8594;</span>
+            <span class="difficulty-chip">${levelColor}</span>
+          `;
+          card.querySelector('.pronounce-btn').onclick = (e)=>{e.stopPropagation();speakWord(pronWord,pronLang);};
+          card.querySelector('.tts-btn').onclick = (e)=>{e.stopPropagation();speakWord(e.currentTarget.dataset.sentence,e.currentTarget.dataset.lang);};
+          card.querySelector('.remove-btn').onclick = (e)=>{e.stopPropagation();removeSavedWord(word);renderSavedWords();};
+          card.onclick = () => openModal(word, idx);
+          cardList.appendChild(card);
+        });
       }
 
       // Infinite scroll logic
@@ -1415,6 +1477,21 @@
           menuBtn.setAttribute('aria-expanded', 'false');
         }
       });
+
+      function showHomeView() {
+        currentView = 'all';
+        renderCards(true);
+      }
+      function showSavedView() {
+        currentView = 'saved';
+        renderSavedWords();
+      }
+      const savedLink = document.getElementById('savedLink');
+      const homeLink = document.getElementById('homeLink');
+      const savedLinkMobile = document.getElementById('savedLinkMobile');
+      const homeLinkMobile = document.getElementById('homeLinkMobile');
+      [savedLink, savedLinkMobile].forEach(l => l && l.addEventListener('click', e => { e.preventDefault(); showSavedView(); mobileNav.setAttribute('hidden',''); menuBtn.setAttribute('aria-expanded','false'); }));
+      [homeLink, homeLinkMobile].forEach(l => l && l.addEventListener('click', e => { e.preventDefault(); showHomeView(); mobileNav.setAttribute('hidden',''); menuBtn.setAttribute('aria-expanded','false'); }));
 
       // Settings Modal logic
       const settingsModalBg = document.getElementById('settingsModalBg');
