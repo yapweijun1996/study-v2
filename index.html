@@ -194,6 +194,7 @@
       width: 340px;
       max-height: 88vh;
       overflow-y: auto;
+      position: relative;
       padding: var(--space-xl) var(--space-lg) var(--space-md) var(--space-lg);
       display: flex;
       flex-direction: column;
@@ -206,14 +207,14 @@
       to { transform: translateY(0) scale(1); opacity: 1; }
     }
     .modal .close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
       background: none;
       border: none;
       font-size: 1.4rem;
       color: #3852e2;
-      align-self: flex-end;
       cursor: pointer;
-      margin-top: -0.6rem;
-      margin-bottom: -0.6rem;
     }
     .modal label {
       font-weight: 500;
