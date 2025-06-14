@@ -5,7 +5,8 @@ const STATIC_ASSETS = [
   '/script_top.js',
   '/manifest.json',
   '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/icon-512.png',
+  '/offline.html'
 ];
 
 self.addEventListener('install', event => {
@@ -31,13 +32,12 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
     caches.match(event.request).then(cached => {
-      const networkFetch = fetch(event.request).then(response => {
+      return fetch(event.request).then(response => {
         if (response && response.status === 200 && response.type === 'basic') {
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone()));
         }
         return response;
-      }).catch(() => cached);
-      return cached || networkFetch;
-    })
+      }).catch(() => cached || caches.match('/offline.html'));
+    }).catch(() => caches.match('/offline.html'))
   );
-}); 
+});
