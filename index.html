@@ -172,6 +172,16 @@
       align-items: center;
       justify-content: center;
       z-index: 2000;
+      transition: opacity 0.25s ease;
+    }
+    .modal-bg.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .modal-bg.visible {
+      opacity: 1;
+      visibility: visible;
     }
     .modal {
       background: #f8fafd;
@@ -682,7 +692,7 @@
   </nav>
 
   <!-- Settings Modal -->
-  <div id="settingsModalBg" class="modal-bg" style="display:none;">
+  <div id="settingsModalBg" class="modal-bg hidden">
     <div class="modal settings-modal">
       <button class="close-btn" id="settingsCloseBtn" title="Close">&times;</button>
       <h2 class="font-semibold text-lg mb-4">Settings</h2>
@@ -1536,20 +1546,22 @@
       const cancelBtn = document.getElementById('cancelBtn');
       // Open modal
       settingsBtn.addEventListener('click', () => {
-        settingsModalBg.style.display = '';
+        settingsModalBg.classList.remove('hidden');
+        settingsModalBg.classList.add('visible');
         setTimeout(() => {
           document.querySelector('.settings-modal').focus();
         }, 100);
       });
       // Close modal
       function closeSettingsModal() {
-        settingsModalBg.style.display = 'none';
+        settingsModalBg.classList.remove('visible');
+        settingsModalBg.classList.add('hidden');
       }
       settingsCloseBtn.addEventListener('click', closeSettingsModal);
       cancelBtn.addEventListener('click', closeSettingsModal);
       // ESC to close
       document.addEventListener('keydown', (e) => {
-        if (settingsModalBg.style.display !== 'none' && (e.key === 'Escape' || e.key === 'Esc')) {
+        if (settingsModalBg.classList.contains('visible') && (e.key === 'Escape' || e.key === 'Esc')) {
           closeSettingsModal();
         }
       });
