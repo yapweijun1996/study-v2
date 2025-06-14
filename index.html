@@ -694,7 +694,10 @@
       </label>
       <label class="block mb-3">
         <span class="text-sm font-medium">Voice</span>
-        <select id="voiceSelect" class="w-full mt-1 px-2 py-1 border rounded"></select>
+        <div class="flex items-center gap-2 mt-1">
+          <select id="voiceSelect" class="flex-1 px-2 py-1 border rounded"></select>
+          <button id="testVoiceBtn" class="px-2 py-1 rounded bg-gray-200">Test voice</button>
+        </div>
       </label>
       <div class="flex justify-end gap-2 mt-6">
         <button id="cancelBtn" class="px-3 py-1 rounded bg-gray-200">Cancel</button>
@@ -938,6 +941,13 @@
       document.getElementById('voiceSelect').addEventListener('change', e => {
         localStorage.setItem('selectedVoice', e.target.value);
       });
+
+      const testBtn = document.getElementById('testVoiceBtn');
+      if (testBtn) {
+        testBtn.addEventListener('click', () => {
+          speakWord('This is a test of the selected voice.', 'en-US');
+        });
+      }
 
       function pickVoice(langCode) {
         const prefix = langCode.split('-')[0];
