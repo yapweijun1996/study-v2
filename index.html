@@ -834,6 +834,17 @@
         };
       }
 
+      function throttle(fn, limit = 100) {
+        let lastCall = 0;
+        return (...args) => {
+          const now = Date.now();
+          if (now - lastCall >= limit) {
+            lastCall = now;
+            fn.apply(this, args);
+          }
+        };
+      }
+
       // Initialize model and API key input
       modelSelect.value = selectedModel;
       lang1.value = fromLang;
@@ -1569,6 +1580,19 @@
       settingsModalBg.addEventListener('click', (e) => {
         if (e.target === settingsModalBg) closeSettingsModal();
       });
+
+      const topbar = document.getElementById('topbar');
+      let lastScrollY = window.scrollY;
+      const handleScroll = throttle(() => {
+        const current = window.scrollY;
+        if (current > lastScrollY && current > 0) {
+          topbar.classList.add('hide');
+        } else {
+          topbar.classList.remove('hide');
+        }
+        lastScrollY = current;
+      }, 100);
+      window.addEventListener('scroll', handleScroll);
     });
   </script>
   <!-- Register Service Worker for PWA offline support -->
