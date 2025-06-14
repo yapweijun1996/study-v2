@@ -374,6 +374,7 @@
       margin: var(--space-lg) auto;
     }
     .hidden { display: none; }
+    .overflow-hidden { overflow: hidden; }
     @keyframes spin { to { transform: rotate(360deg); } }
     /* Sticky topbar helpers */
     .topbar.hide { transform: translateY(-100%); }
@@ -1295,6 +1296,7 @@
           }
         });
       modalBg.style.display = '';
+      document.body.classList.add('overflow-hidden');
       setTimeout(() => modalContent.querySelector('#askAiInput').focus(), 250);
     }
 
@@ -1320,6 +1322,7 @@
 
     function closeModal() {
       modalBg.style.display = 'none';
+      document.body.classList.remove('overflow-hidden');
     }
 
     function askAiAboutWord(word, question) {
@@ -1571,6 +1574,7 @@
       settingsBtn.addEventListener('click', () => {
         settingsModalBg.classList.remove('hidden');
         settingsModalBg.classList.add('visible');
+        document.body.classList.add('overflow-hidden');
         setTimeout(() => {
           document.querySelector('.settings-modal').focus();
         }, 100);
@@ -1579,6 +1583,7 @@
       function closeSettingsModal() {
         settingsModalBg.classList.remove('visible');
         settingsModalBg.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
       }
       settingsCloseBtn.addEventListener('click', closeSettingsModal);
       cancelBtn.addEventListener('click', closeSettingsModal);
