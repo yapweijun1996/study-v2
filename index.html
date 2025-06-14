@@ -102,6 +102,30 @@
       transform: scale(1.02);
       transition: transform 0.15s;
     }
+    /* Placeholder card styles */
+    .placeholder-card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: var(--card-shadow);
+      padding: var(--space-md);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .placeholder-line {
+      height: 1rem;
+      background: #e4e4e4;
+      border-radius: 4px;
+      animation: placeholderPulse 1.5s ease-in-out infinite;
+    }
+    .placeholder-line.short { width: 60%; }
+    .placeholder-line.medium { width: 80%; }
+    .placeholder-line.long { width: 100%; }
+    @keyframes placeholderPulse {
+      0% { background-color: #eee; }
+      50% { background-color: #ddd; }
+      100% { background-color: #eee; }
+    }
     .card-chevron {
       position: absolute;
       right: 1.2rem;
@@ -751,6 +775,20 @@
         localStorage.setItem('geminiModel', selectedModel);
       };
 
+      function showPlaceholders(count = CARDS_BATCH_SIZE) {
+        cardList.innerHTML = '';
+        for (let i = 0; i < count; i++) {
+          const ph = document.createElement('div');
+          ph.className = 'placeholder-card';
+          ph.innerHTML = `
+            <div class="placeholder-line short"></div>
+            <div class="placeholder-line medium"></div>
+            <div class="placeholder-line long"></div>
+          `;
+          cardList.appendChild(ph);
+        }
+      }
+
       // Gemini API config
       const generationConfig = {
         temperature: 1,
@@ -1206,6 +1244,7 @@
         // Use only the #loader element for loading indication
         const loaderEl = document.getElementById('loader');
         loaderEl.classList.remove('hidden');
+        if (!append) showPlaceholders();
         // Compose prompt for Gemini
         const prompt = `Generate a list of 10 English words with their Chinese translations, IPA pronunciations, definitions, and example sentences in both languages. Format as a JSON array with keys: en, zh, en_pron, zh_pron, en_def, zh_def, en_example, zh_example.`;
         try {
