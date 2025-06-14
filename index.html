@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3852e2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <style>
     :root {
       --header-h: 64px;
@@ -535,6 +538,15 @@
       border: 1px solid #ccc;
       border-radius: 0.5rem;
     }
+    .install-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.3rem 0.8rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
     .settings-btn {
       background: none;
       border: none;
@@ -653,6 +665,7 @@
     </nav>
     <div class="topbar-actions">
       <input id="searchInput" class="search-input" type="search" placeholder="Search..." />
+      <button id="installBtn" class="install-btn" style="display:none;">Install</button>
       <button id="settingsBtn" aria-label="Settings" class="settings-btn">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
@@ -1602,6 +1615,24 @@
           .catch(err => console.error('SW registration failed', err));
       });
     }
+  </script>
+  <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.finally(() => {
+          deferredPrompt = null;
+          installBtn.style.display = 'none';
+        });
+      }
+    });
   </script>
 </body>
 </html>
