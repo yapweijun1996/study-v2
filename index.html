@@ -519,6 +519,12 @@
       align-items: center;
       gap: 0.5rem;
     }
+    .search-input {
+      padding: 0.25rem 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+    }
     .settings-btn {
       background: none;
       border: none;
@@ -636,6 +642,7 @@
       </ul>
     </nav>
     <div class="topbar-actions">
+      <input id="searchInput" class="search-input" type="search" placeholder="Search..." />
       <button id="settingsBtn" aria-label="Settings" class="settings-btn">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
@@ -775,6 +782,7 @@
       let selectedModel = localStorage.getItem('geminiModel') || 'gemini-2.0-flash';
       let selectedLevel = localStorage.getItem('selectedLevel') || 'easy';
       let chatHistory = {};
+      let searchQuery = '';
 
     // Elements
     const cardList = document.getElementById('cardList');
@@ -782,7 +790,8 @@
     const lang2 = document.getElementById('lang2');
     const modalBg = document.getElementById('modalBg');
     const modalContent = document.getElementById('modalContent');
-      const modelSelect = document.getElementById('modelSelect');
+    const searchInput = document.getElementById('searchInput');
+    const modelSelect = document.getElementById('modelSelect');
 
       // Saved words helpers
       const STORAGE_KEY = 'savedWords';
@@ -807,6 +816,14 @@
       }
       let currentView = 'all';
 
+      function debounce(fn, delay = 300) {
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn.apply(this, args), delay);
+        };
+      }
+
       // Initialize model and API key input
       modelSelect.value = selectedModel;
       lang1.value = fromLang;
@@ -829,6 +846,14 @@
           `;
           cardList.appendChild(ph);
         }
+      }
+
+      function filterData(list) {
+        if (!searchQuery.trim()) return list;
+        const q = searchQuery.toLowerCase();
+        return list.filter(w =>
+          w.en.toLowerCase().includes(q) || w.zh.includes(searchQuery)
+        );
       }
 
       // Gemini API config
@@ -882,13 +907,14 @@
       const CARDS_BATCH_SIZE = 10;
       function renderCards(reset = false) {
         if (reset) cardsToShow = CARDS_BATCH_SIZE;
-      cardList.innerHTML = '';
-      // Only show cards if two different languages selected
-      if (fromLang === toLang) {
-        cardList.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">Please select different languages.</div>';
-        return;
-      }
-        const toRender = vocabData.slice(0, cardsToShow);
+        cardList.innerHTML = '';
+        // Only show cards if two different languages selected
+        if (fromLang === toLang) {
+          cardList.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">Please select different languages.</div>';
+          return;
+        }
+        const filtered = filterData(vocabData);
+        const toRender = filtered.slice(0, cardsToShow);
         toRender.forEach((word, idx) => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -931,7 +957,7 @@
         cardList.appendChild(card);
         });
         // If more cards to load, add a sentinel div for scroll detection
-      if (cardsToShow < vocabData.length) {
+      if (cardsToShow < filtered.length) {
         let sentinel = document.createElement('div');
         sentinel.id = 'cardSentinel';
         sentinel.style.height = '32px';
@@ -940,7 +966,7 @@
     }
 
       function renderSavedWords() {
-        const saved = getSavedWords();
+        const saved = filterData(getSavedWords());
         cardList.innerHTML = '';
         if (saved.length === 0) {
           cardList.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">No saved words.</div>';
@@ -983,7 +1009,7 @@
         const rect = sentinel.getBoundingClientRect();
         if (rect.top < window.innerHeight + 100) {
           // Load more cards
-          if (cardsToShow < vocabData.length) {
+          if (cardsToShow < filterData(vocabData).length) {
             cardsToShow += CARDS_BATCH_SIZE;
             renderCards();
           }
@@ -1492,6 +1518,16 @@
       const homeLinkMobile = document.getElementById('homeLinkMobile');
       [savedLink, savedLinkMobile].forEach(l => l && l.addEventListener('click', e => { e.preventDefault(); showSavedView(); mobileNav.setAttribute('hidden',''); menuBtn.setAttribute('aria-expanded','false'); }));
       [homeLink, homeLinkMobile].forEach(l => l && l.addEventListener('click', e => { e.preventDefault(); showHomeView(); mobileNav.setAttribute('hidden',''); menuBtn.setAttribute('aria-expanded','false'); }));
+
+      const onSearch = debounce(() => {
+        searchQuery = searchInput.value;
+        if (currentView === 'saved') {
+          renderSavedWords();
+        } else {
+          renderCards(true);
+        }
+      }, 300);
+      searchInput.addEventListener('input', onSearch);
 
       // Settings Modal logic
       const settingsModalBg = document.getElementById('settingsModalBg');
