@@ -1026,7 +1026,7 @@
         // Extract pinyin if present in parentheses
         const pinyinMatch = toExample.match(/[（(]([^）)]+)[）)]/);
         const toText = toExample.replace(/[（(][^）)]+[）)]/g, '').trim();
-        const ttsTo = `<button class="tts-btn" data-sentence="${toText.replace(/"/g,'&quot;')}" data-lang="${toLang==='en'?'en-US':'zh-CN'}" title="Read example">��</button>`;
+        const ttsTo = `<button class="tts-btn" data-sentence="${toText.replace(/"/g,'&quot;')}" data-lang="${toLang==='en'?'en-US':'zh-CN'}" title="Read example">🔊</button>`;
         const pinyinHtml = pinyinMatch ? `<div class="pinyin">（${pinyinMatch[1]}）</div>` : '';
         const examplesHtml = `
           <div id="examplesSection">
