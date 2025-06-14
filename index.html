@@ -564,6 +564,21 @@
       background: #e4eafd;
       outline: none;
     }
+    .toolbar-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      border-radius: 50%;
+      padding: 0.4rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toolbar-btn:hover,
+    .toolbar-btn:focus {
+      background: #e4eafd;
+      outline: none;
+    }
     .menu-btn {
       background: none;
       border: none;
@@ -676,10 +691,11 @@
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4 a1.65 1.65 0 0 0-.82.22 1.65 1.65 0 0 1-1.82-2.64 1.65 1.65 0 0 0-.22-.82 1.65 1.65 0 0 0-1.82-.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06 A1.65 1.65 0 0 0 4.6 9 a1.65 1.65 0 0 0-.22-.82A1.65 1.65 0 0 1 7.22 6.4 a1.65 1.65 0 0 0 .82-.22A1.65 1.65 0 0 0 9 4.6 a1.65 1.65 0 0 0-.33-1.82L8.61 2.72 a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 15 4.6 a1.65 1.65 0 0 0 .82.22 1.65 1.65 0 0 1 1.82 2.64 1.65 1.65 0 0 0 .22.82 1.65 1.65 0 0 0 1.82.33z"></path>
         </svg>
       </button>
+      <button id="aiToolbarBtn" aria-label="AI Toolbar" class="toolbar-btn" aria-controls="aiToolbar" aria-expanded="false">🤖</button>
       <button id="menuBtn" aria-label="Menu" class="menu-btn" aria-controls="mobileNav" aria-expanded="false">☰</button>
     </div>
   </header>
-  <section class="ai-toolbar" aria-label="AI Controls">
+  <section id="aiToolbar" class="ai-toolbar" aria-label="AI Controls">
     <div>
       <button id="toolbarCloseBtn" class="toolbar-close" aria-label="Close toolbar">&times;</button>
     </div>
@@ -1473,18 +1489,19 @@
       })();
 
       // Toggle mobile toolbar bottom sheet with backdrop
-      const menuBtnEl = document.getElementById('menuBtn');
+      const aiToolbarBtn = document.getElementById('aiToolbarBtn');
       const backdropEl = document.getElementById('toolbarBackdrop');
       const closeToolbarBtn = document.getElementById('toolbarCloseBtn');
-      if (menuBtnEl) {
-        menuBtnEl.addEventListener('click', () => {
+      if (aiToolbarBtn) {
+        aiToolbarBtn.addEventListener('click', () => {
           const sheet = document.querySelector('.ai-toolbar');
           const isOpen = sheet.classList.toggle('open');
           backdropEl.classList.toggle('open', isOpen);
+          aiToolbarBtn.setAttribute('aria-expanded', isOpen.toString());
           if (isOpen) {
             closeToolbarBtn.focus();
           } else {
-            menuBtnEl.focus();
+            aiToolbarBtn.focus();
           }
         });
       }
@@ -1493,7 +1510,8 @@
           const sheet = document.querySelector('.ai-toolbar');
           sheet.classList.remove('open');
           backdropEl.classList.remove('open');
-          menuBtnEl.focus();
+          aiToolbarBtn.setAttribute('aria-expanded', 'false');
+          aiToolbarBtn.focus();
         });
       }
       // Close on backdrop tap
@@ -1501,6 +1519,8 @@
         backdropEl.addEventListener('click', () => {
           document.querySelector('.ai-toolbar').classList.remove('open');
           backdropEl.classList.remove('open');
+          aiToolbarBtn.setAttribute('aria-expanded', 'false');
+          aiToolbarBtn.focus();
         });
       }
       // Swipe-down to close sheet
@@ -1513,6 +1533,8 @@
           if (dy > 50) {
             sheetEl.classList.remove('open');
             backdropEl.classList.remove('open');
+            aiToolbarBtn.setAttribute('aria-expanded', 'false');
+            aiToolbarBtn.focus();
           }
         });
       }
