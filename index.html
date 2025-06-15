@@ -679,12 +679,12 @@
         <li><a href="#" id="homeLink" class="nav-link">Home</a></li>
         <li><a href="#" class="nav-link">About</a></li>
         <li><a href="#" class="nav-link">Contact</a></li>
-        <li><a href="#" id="savedLink" class="nav-link">Saved</a></li>
       </ul>
     </nav>
     <div class="topbar-actions">
       <input id="searchInput" class="search-input" type="search" placeholder="Search..." />
       <button id="installBtn" class="install-btn" style="display:none;">Install</button>
+      <button id="savedBtn" aria-label="Saved">⭐</button>
       <button id="settingsBtn" aria-label="Settings" class="settings-btn">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"></circle>
@@ -720,7 +720,6 @@
       <li><a href="#" id="homeLinkMobile" class="mobile-nav-link">Home</a></li>
       <li><a href="#" class="mobile-nav-link">About</a></li>
       <li><a href="#" class="mobile-nav-link">Contact</a></li>
-      <li><a href="#" id="savedLinkMobile" class="mobile-nav-link">Saved</a></li>
     </ul>
   </nav>
 
@@ -1572,12 +1571,20 @@
         currentView = 'saved';
         renderSavedWords();
       }
-      const savedLink = document.getElementById('savedLink');
+      const savedBtn = document.getElementById('savedBtn');
       const homeLink = document.getElementById('homeLink');
-      const savedLinkMobile = document.getElementById('savedLinkMobile');
       const homeLinkMobile = document.getElementById('homeLinkMobile');
-        [savedLink, savedLinkMobile].forEach(l => l && l.addEventListener("click", e => { e.preventDefault(); showSavedView(); mobileNav.classList.remove("open"); mobileNav.setAttribute("aria-hidden","true"); menuBtn.setAttribute("aria-expanded","false"); }));
-        [homeLink, homeLinkMobile].forEach(l => l && l.addEventListener("click", e => { e.preventDefault(); showHomeView(); mobileNav.classList.remove("open"); mobileNav.setAttribute("aria-hidden","true"); menuBtn.setAttribute("aria-expanded","false"); }));
+      savedBtn.addEventListener('click', e => {
+        e.preventDefault();
+        showSavedView();
+      });
+      [homeLink, homeLinkMobile].forEach(l => l && l.addEventListener("click", e => {
+        e.preventDefault();
+        showHomeView();
+        mobileNav.classList.remove("open");
+        mobileNav.setAttribute("aria-hidden","true");
+        menuBtn.setAttribute("aria-expanded","false");
+      }));
 
       const onSearch = debounce(() => {
         searchQuery = searchInput.value;
