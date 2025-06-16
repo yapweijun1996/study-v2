@@ -342,16 +342,18 @@
       align-self: flex-start;
       margin-top: 0.4rem;
     }
-    /* Modal */
+    /* Enhanced Modal System */
     .modal-bg {
       position: fixed;
       left: 0; top: 0; right: 0; bottom: 0;
-      background: rgba(56, 82, 226, 0.17);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 2000;
-      transition: opacity 0.25s ease;
+      transition: all 0.3s ease;
+      padding: 1rem;
     }
     .modal-bg.hidden {
       opacity: 0;
@@ -362,26 +364,256 @@
       opacity: 1;
       visibility: visible;
     }
+
+    /* Modern Modal Container */
     .modal {
       background: var(--modal-bg);
-      border-radius: 1.5rem;
-      box-shadow: 0 8px 40px rgba(56, 82, 226, 0.4);
-      max-width: 95vw;
-      width: 340px;
-      max-height: 88vh;
-      overflow-y: auto;
+      border-radius: 1.25rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: min(95vw, 480px);
+      width: 100%;
+      max-height: min(90vh, 700px);
+      overflow: hidden;
       position: relative;
-      padding: var(--space-xl) var(--space-lg) var(--space-md) var(--space-lg);
       display: flex;
       flex-direction: column;
-      gap: var(--space-md);
-      animation: modalIn 0.25s cubic-bezier(.36,.76,.6,1.21);
+      animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       z-index: 2001;
       border: 1px solid var(--border);
     }
+
+    /* Modal Header */
+    .modal-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--card-bg);
+      position: relative;
+    }
+
+    .modal-word-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-word-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-word-main {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .modal-word-translation {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .modal-pronunciation {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .modal-phonetic {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-family: 'Courier New', monospace;
+      background: var(--input-bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      border: 1px solid var(--border);
+    }
+
+    .modal-pronounce-btn {
+      background: var(--primary-light);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      color: var(--primary);
+    }
+
+    .modal-pronounce-btn:hover,
+    .modal-pronounce-btn:focus {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+      outline: none;
+    }
+
+    /* Modal Body */
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .modal-section {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-section:last-child {
+      border-bottom: none;
+    }
+
+    .modal-section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-section-icon {
+      font-size: 1.1rem;
+    }
     @keyframes modalIn {
-      from { transform: translateY(32px) scale(0.97); opacity: 0; }
+      from { transform: translateY(20px) scale(0.95); opacity: 0; }
       to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* Definition Section */
+    .modal-definition {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .modal-definition-item {
+      padding: 0.75rem;
+      background: var(--input-bg);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .modal-definition-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    .modal-definition-translation {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Examples Section */
+    .modal-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .modal-example-item {
+      background: var(--input-bg);
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+    }
+
+    .modal-example-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-example-text {
+      flex: 1;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .modal-example-translation {
+      flex: 1;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .modal-tts-btn {
+      background: var(--primary-light);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .modal-tts-btn:hover,
+    .modal-tts-btn:focus {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+      outline: none;
+    }
+
+    /* Load More Examples Button */
+    .modal-load-examples-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, #4c63d2 100%);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(56, 82, 226, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .modal-load-examples-btn:hover,
+    .modal-load-examples-btn:focus {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(56, 82, 226, 0.3);
+      background: linear-gradient(135deg, #4c63d2 0%, var(--primary) 100%);
+      outline: none;
+    }
+
+    .modal-load-examples-btn:disabled {
+      background: var(--placeholder-bg);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      color: var(--text-secondary);
     }
     .modal .close-btn {
       position: absolute;
@@ -447,16 +679,106 @@
       background: #f0f4fe;
       font-size: 1.02rem;
     }
-    .modal .send-btn {
-      background: #3852e2;
-      color: #fff;
+    /* AI Chat Section */
+    .modal-ai-chat {
+      background: var(--card-bg);
+    }
+
+    .modal-chat-history {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--input-bg);
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .modal-chat-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .modal-chat-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .modal-chat-input-container {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    .modal-chat-input {
+      flex: 1;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      color: var(--text);
+      transition: all 0.2s ease;
+      resize: none;
+      min-height: 44px;
+      max-height: 120px;
+    }
+
+    .modal-chat-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(56, 82, 226, 0.1);
+    }
+
+    .modal-chat-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .modal-send-btn {
+      background: var(--primary);
+      color: white;
       border: none;
-      border-radius: 1.2rem;
-      padding: 0.5rem 1.5rem;
-      font-size: 1rem;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 500;
       cursor: pointer;
-      margin-top: 0.5rem;
-      align-self: flex-end;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      min-width: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .modal-send-btn:hover,
+    .modal-send-btn:focus {
+      background: #4c63d2;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(56, 82, 226, 0.3);
+      outline: none;
+    }
+
+    .modal-send-btn:disabled {
+      background: var(--placeholder-bg);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      color: var(--text-secondary);
+    }
+
+    .modal-ai-reply {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--input-bg);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text);
     }
     /* Load More Examples Button Styling */
     .load-examples-btn {
@@ -663,30 +985,145 @@
         font-size: 0.8rem;
       }
     }
-    /* Modal Mobile Responsiveness */
+    /* Enhanced Modal Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .modal-bg {
+        padding: 0.5rem;
+      }
+
+      .modal {
+        max-width: 100%;
+        max-height: 95vh;
+        border-radius: 1rem;
+      }
+
+      .modal-header {
+        padding: 1.25rem 1.25rem 0.75rem 1.25rem;
+      }
+
+      .modal-word-main {
+        font-size: 1.35rem;
+      }
+
+      .modal-word-translation {
+        font-size: 1.15rem;
+      }
+
+      .modal-section {
+        padding: 1rem 1.25rem;
+      }
+
+      .modal-pronounce-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+      }
+
+      .modal-tts-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .modal-bg {
+        padding: 0.25rem;
+      }
+
+      .modal {
+        border-radius: 0.75rem;
+        max-height: 98vh;
+      }
+
+      .modal-header {
+        padding: 1rem 1rem 0.5rem 1rem;
+      }
+
+      .modal-word-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .modal-word-main {
+        font-size: 1.25rem;
+      }
+
+      .modal-word-translation {
+        font-size: 1.05rem;
+      }
+
+      .modal-pronunciation {
+        flex-wrap: wrap;
+        gap: 0.375rem;
+      }
+
+      .modal-phonetic {
+        font-size: 0.85rem;
+        padding: 0.2rem 0.4rem;
+      }
+
+      .modal-section {
+        padding: 0.875rem 1rem;
+      }
+
+      .modal-section-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .modal-example-content {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .modal-chat-input-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .modal-send-btn {
+        width: 100%;
+        min-height: 48px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .modal-header {
+        padding: 0.875rem 0.875rem 0.5rem 0.875rem;
+      }
+
+      .modal-word-main {
+        font-size: 1.15rem;
+      }
+
+      .modal-word-translation {
+        font-size: 1rem;
+      }
+
+      .modal-section {
+        padding: 0.75rem 0.875rem;
+      }
+
+      .modal-pronounce-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+      }
+
+      .modal-tts-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Container adjustments */
     @media (max-width: 600px) {
       .container {
         margin: 1rem 0;
         padding-top: calc(var(--header-h) + 1rem);
-      }
-      .modal {
-        width: 95vw;
-        max-width: 95vw;
-        margin: 0.5rem;
-        padding: 2.5rem 1rem 1rem 1rem;
-        max-height: 90vh;
-      }
-      .modal .close-btn {
-        top: 0.5rem;
-        right: 0.5rem;
-        width: 2.5rem;
-        height: 2.5rem;
-        font-size: 1.4rem;
-      }
-      .load-examples-btn {
-        width: 100%;
-        padding: 0.875rem 1rem;
-        font-size: 1rem;
       }
       .header {
         flex-direction: column;
@@ -1992,10 +2429,10 @@
       // Function to load more examples for a word
       async function loadMoreExamples(word) {
         const wordKey = word.en + '|examples';
-        const btn = modalContent.querySelector('.load-examples-btn');
-        const examplesDiv = modalContent.querySelector('#examplesSection');
+        const btn = modalContent.querySelector('.modal-load-examples-btn');
+        const examplesDiv = modalContent.querySelector('.modal-examples');
         btn.disabled = true;
-        btn.textContent = 'Loading...';
+        btn.innerHTML = '<span>Loading...</span>';
         // Compose prompt for 3 more examples
         const prompt = `Generate 3 additional example sentences using the word "${word.en}" (Chinese: ${word.zh}). Provide English and Chinese versions for each, and format as a JSON array of objects with keys en_example and zh_example.`;
         try {
@@ -2042,22 +2479,27 @@
         const fromExample = word[fromLang + '_example'];
         const toExample = word[toLang + '_example'];
         // Generate from-language TTS button
-        const ttsFrom = `<button class="tts-btn" data-sentence="${fromExample.replace(/"/g,'&quot;')}" data-lang="${fromLang==='en'?'en-US':'zh-CN'}" title="Read example">🔊</button>`;
+        const ttsFrom = `<button class="modal-tts-btn" data-sentence="${fromExample.replace(/"/g,'&quot;')}" data-lang="${fromLang==='en'?'en-US':'zh-CN'}" title="Read example" aria-label="Read example sentence">🔊</button>`;
         // Extract pinyin if present in parentheses
         const pinyinMatch = toExample.match(/[（(]([^）)]+)[）)]/);
         const toText = toExample.replace(/[（(][^）)]+[）)]/g, '').trim();
-        const ttsTo = `<button class="tts-btn" data-sentence="${toText.replace(/"/g,'&quot;')}" data-lang="${toLang==='en'?'en-US':'zh-CN'}" title="Read example">🔊</button>`;
+        const ttsTo = `<button class="modal-tts-btn" data-sentence="${toText.replace(/"/g,'&quot;')}" data-lang="${toLang==='en'?'en-US':'zh-CN'}" title="Read example" aria-label="Read example translation">🔊</button>`;
         const pinyinHtml = pinyinMatch ? `<div class="pinyin">（${pinyinMatch[1]}）</div>` : '';
         const examplesHtml = `
-          <div id="examplesSection">
-            <b>Example:</b><br>
-            ${fromExample}${ttsFrom}<br>
-            ${toText}${ttsTo}
+          <div class="modal-example-item">
+            <div class="modal-example-content">
+              <div class="modal-example-text">${fromExample}</div>
+              ${ttsFrom}
+            </div>
+            <div class="modal-example-content">
+              <div class="modal-example-translation">${toText}</div>
+              ${ttsTo}
+            </div>
             ${pinyinHtml}
           </div>`;
       // Pronunciation buttons in modal
-      let pronBtnEN = `<button class="pronounce-btn" data-word="${word.en}" data-lang="en-US" title="Pronounce">🔊</button>`;
-      let pronBtnZH = `<button class="pronounce-btn" data-word="${word.zh}" data-lang="zh-CN" title="Pronounce">🔊</button>`;
+      let pronBtnEN = `<button class="modal-pronounce-btn" data-word="${word.en}" data-lang="en-US" title="Pronounce English" aria-label="Pronounce English word">🔊</button>`;
+      let pronBtnZH = `<button class="modal-pronounce-btn" data-word="${word.zh}" data-lang="zh-CN" title="Pronounce Chinese" aria-label="Pronounce Chinese word">🔊</button>`;
         // Unique key for chat history
         const wordKey = word.en + '|' + word.zh;
         // Render chat history for this word
@@ -2074,59 +2516,120 @@
           }).join('') + '</div>';
         }
       modalContent.innerHTML = `
-        <button class="close-btn" title="Close">&times;</button>
-          <div style="font-size:1.28rem;font-weight:600;margin-bottom:var(--space-xs);">
-          ${word.en} ${pronBtnEN} / ${word.zh} ${pronBtnZH}
+        <button class="close-btn" title="Close" aria-label="Close modal">&times;</button>
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <div class="modal-word-section">
+            <div class="modal-word-title">
+              <span class="modal-word-main">${word.en}</span>
+              <span class="modal-word-translation">${word.zh}</span>
+            </div>
+            <div class="modal-pronunciation">
+              <span class="modal-phonetic">${word.en_pron}</span>
+              ${pronBtnEN}
+              <span class="modal-phonetic">${word.zh_pron}</span>
+              ${pronBtnZH}
+            </div>
+          </div>
         </div>
-          <div style="font-size:1rem;color:#888;margin-bottom:var(--space-sm);">
-          [${word.en_pron}] / [${word.zh_pron}]
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+          <!-- Definition Section -->
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="modal-section-icon">📖</span>
+              Definition
+            </h3>
+            <div class="modal-definition">
+              <div class="modal-definition-item">
+                <div class="modal-definition-text">${word[fromLang + '_def']}</div>
+              </div>
+              <div class="modal-definition-item">
+                <div class="modal-definition-translation">${word[toLang + '_def']}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Examples Section -->
+          <div class="modal-section">
+            <h3 class="modal-section-title">
+              <span class="modal-section-icon">💬</span>
+              Examples
+            </h3>
+            <div class="modal-examples" id="examplesSection">
+              ${examplesHtml}
+            </div>
+            <button class="modal-load-examples-btn" id="loadExamplesBtn">
+              <span>Load More Examples</span>
+            </button>
+          </div>
+
+          <!-- AI Chat Section -->
+          <div class="modal-section modal-ai-chat">
+            <h3 class="modal-section-title">
+              <span class="modal-section-icon">🤖</span>
+              Ask AI about this word
+            </h3>
+            ${chatHtml}
+            <div class="modal-chat-input-group">
+              <div class="modal-chat-input-container">
+                <textarea
+                  id="askAiInput"
+                  class="modal-chat-input"
+                  placeholder="Ask anything about this word..."
+                  rows="1"
+                  autocomplete="off"
+                  aria-label="Ask AI about this word"></textarea>
+                <button class="modal-send-btn" id="sendBtn" aria-label="Send message">
+                  <span>Send</span>
+                </button>
+              </div>
+            </div>
+            <div class="modal-ai-reply" id="aiReply" style="display:none;"></div>
+          </div>
         </div>
-          <div style="margin-bottom:var(--space-sm);">
-          <b>Definition:</b><br>
-          <span>${word[fromLang + '_def']}</span>
-          <br><span style="color:#3852e2;">${word[toLang + '_def']}</span>
-        </div>
-          ${examplesHtml}
-          <button class="load-examples-btn" style="margin-top:var(--space-sm);">
-            <span>Load More Examples</span>
-          </button>
-          <hr style="margin:var(--space-sm) 0 var(--space-xs) 0;">
-          ${chatHtml}
-        <label for="askAiInput">Ask AI about this word</label>
-        <input id="askAiInput" placeholder="Type your question..." autocomplete="off" />
-        <button class="send-btn" id="sendBtn">Send</button>
-        <div class="ai-reply" id="aiReply" style="display:none;"></div>
       `;
       // Close button
       modalContent.querySelector('.close-btn').onclick = closeModal;
       // Pronunciation buttons in modal
-      modalContent.querySelectorAll('.pronounce-btn').forEach(btn => {
+      modalContent.querySelectorAll('.modal-pronounce-btn').forEach(btn => {
         btn.onclick = (e) => {
           e.stopPropagation();
           speakWord(btn.dataset.word, btn.dataset.lang);
         };
       });
         // TTS for existing examples
-        modalContent.querySelectorAll('#examplesSection .tts-btn').forEach(btn => {
+        modalContent.querySelectorAll('.modal-tts-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
             speakWord(btn.dataset.sentence, btn.dataset.lang);
           };
         });
         // Load more examples button
-        modalContent.querySelector('.load-examples-btn').onclick = () => loadMoreExamples(word);
+        modalContent.querySelector('.modal-load-examples-btn').onclick = () => loadMoreExamples(word);
       // Ask AI
         const input = modalContent.querySelector('#askAiInput');
         const sendBtn = modalContent.querySelector('#sendBtn');
+
+        // Auto-resize textarea
+        input.addEventListener('input', () => {
+          input.style.height = 'auto';
+          input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        });
+
         sendBtn.addEventListener('click', () => {
           const question = input.value.trim();
           askAiAboutWord(word, question);
           input.value = '';
+          input.style.height = 'auto';
           input.focus();
         });
-        // Allow Enter key to send AI message
+
+        // Allow Enter key to send AI message (Shift+Enter for new line)
         input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendBtn.click();
           }
