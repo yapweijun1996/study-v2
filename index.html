@@ -423,35 +423,7 @@
     .topbar.hide { transform: translateY(-100%); }
     /* Touch-friendly hit areas */
     .ai-toolbar button, .topbar button, .card button { min-width: 44px; min-height: 44px; }
-    .main-nav {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-    .nav-list {
-      display: flex;
-      gap: 1.5rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .nav-link {
-      color: #222;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .nav-link:hover,
-    .nav-link:focus {
-      color: var(--primary);
-      outline: none;
-    }
-    /* Responsive: hide main nav on narrow screens */
-    @media (max-width: 800px) {
-      .main-nav {
-        display: none;
-      }
-    }
+
     /* Marked.js markdown output for .ai-reply */
     .ai-reply h1,
     .ai-reply h2,
@@ -696,13 +668,7 @@
       <span class="topbar-logo">📚</span>
       <span class="topbar-title">AI Vocabulary Cards</span>
     </div>
-    <nav id="mainNav" class="main-nav" aria-label="Main navigation">
-      <ul class="nav-list">
-        <li><a href="#" id="homeLink" class="nav-link">Home</a></li>
-        <li><a href="#" class="nav-link">About</a></li>
-        <li><a href="#" class="nav-link">Contact</a></li>
-      </ul>
-    </nav>
+
     <div class="topbar-actions">
       <input id="searchInput" class="search-input" type="search" placeholder="Search..." />
       <button id="installBtn" class="install-btn" style="display:none;">Install</button>
