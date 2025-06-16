@@ -467,33 +467,7 @@
       letter-spacing: 1px;
       user-select: none;
     }
-    .main-nav {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-    }
-    .nav-list {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .nav-link {
-      color: #222;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 1.05rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 0.5rem;
-      transition: background 0.2s, color 0.2s;
-    }
-    .nav-link:hover,
-    .nav-link:focus {
-      background: #e4eafd;
-      color: var(--primary);
-      outline: none;
-    }
+
     .topbar-actions {
       display: flex;
       align-items: center;
@@ -546,11 +520,8 @@
       background: #e4eafd;
       outline: none;
     }
-    /* Responsive: hide nav, show hamburger on mobile */
+    /* Responsive: show hamburger on mobile */
     @media (max-width: 800px) {
-      .main-nav {
-        display: none;
-      }
       .menu-btn {
         display: inline-flex;
         align-items: center;
@@ -1764,14 +1735,9 @@ Make sure the words match the specified difficulty level and include varied topi
         renderSavedWords();
       }
       const savedBtn = document.getElementById('savedBtn');
-      const homeLink = document.getElementById('homeLink');
       savedBtn.addEventListener('click', e => {
         e.preventDefault();
         showSavedView();
-      });
-      homeLink && homeLink.addEventListener('click', e => {
-        e.preventDefault();
-        showHomeView();
       });
 
       const onSearch = debounce(() => {
