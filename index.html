@@ -17,12 +17,36 @@
       --space-md: 1rem;
       --space-lg: 1.5rem;
       --space-xl: 2rem;
-      /* Theming colors */
+      /* Light theme colors */
       --bg: #f7f7f9;
       --text: #222;
+      --text-secondary: #666;
       --card-bg: #fff;
       --primary: #3852e2;
+      --primary-light: #e4eafd;
       --card-shadow: 0 4px 16px #0001;
+      --border: #e4eafd;
+      --modal-bg: #f8fafd;
+      --input-bg: #f6f8ff;
+      --placeholder-bg: #eee;
+      --error-color: #dc2626;
+      --success-color: #16a34a;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f0f23;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --card-bg: #1e1e3f;
+      --primary: #6366f1;
+      --primary-light: #312e81;
+      --card-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      --border: #374151;
+      --modal-bg: #1e1e3f;
+      --input-bg: #374151;
+      --placeholder-bg: #4b5563;
+      --error-color: #ef4444;
+      --success-color: #22c55e;
     }
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -31,6 +55,7 @@
       color: var(--text);
       line-height: 1.5;
       padding-top: 56px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     html { font-size: clamp(0.875rem, 1.5vw + 0.5rem, 1.125rem); }
     .header {
@@ -90,7 +115,7 @@
       border-radius: 1rem;
       box-shadow: var(--card-shadow);
       padding: var(--space-md) var(--space-md) var(--space-sm) var(--space-md);
-      transition: box-shadow 0.2s;
+      transition: all 0.3s ease;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -99,9 +124,9 @@
       border: 2px solid transparent;
     }
     .card:hover, .card:focus {
-      box-shadow: 0 8px 24px #3852e244;
-      border: 2px solid #3852e2;
-      background: #f6f8ff;
+      box-shadow: 0 8px 24px rgba(56, 82, 226, 0.3);
+      border: 2px solid var(--primary);
+      background: var(--primary-light);
       transform: scale(1.02);
       transition: transform 0.15s;
     }
@@ -117,7 +142,7 @@
     }
     .placeholder-line {
       height: 1rem;
-      background: #e4e4e4;
+      background: var(--placeholder-bg);
       border-radius: 4px;
       animation: placeholderPulse 1.5s ease-in-out infinite;
     }
@@ -125,9 +150,9 @@
     .placeholder-line.medium { width: 80%; }
     .placeholder-line.long { width: 100%; }
     @keyframes placeholderPulse {
-      0% { background-color: #eee; }
-      50% { background-color: #ddd; }
-      100% { background-color: #eee; }
+      0% { background-color: var(--placeholder-bg); }
+      50% { background-color: var(--border); }
+      100% { background-color: var(--placeholder-bg); }
     }
     .card-chevron {
       position: absolute;
@@ -145,15 +170,21 @@
       font-weight: 500;
     }
     .pronounce-btn {
-      background: #e4eafd;
+      background: var(--primary-light);
       border: none;
       border-radius: 50%;
-      width: 32px; height: 32px;
+      width: 44px; height: 44px;
       display: flex;
       align-items: center; justify-content: center;
       cursor: pointer;
       font-size: 1.1rem;
       margin-left: 0.3rem;
+      transition: all 0.2s ease;
+    }
+    .pronounce-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
     }
     .expand-btn {
       background: #3852e2;
@@ -187,9 +218,9 @@
       visibility: visible;
     }
     .modal {
-      background: #f8fafd;
+      background: var(--modal-bg);
       border-radius: 1.5rem;
-      box-shadow: 0 8px 40px #3852e266;
+      box-shadow: 0 8px 40px rgba(56, 82, 226, 0.4);
       max-width: 95vw;
       width: 340px;
       max-height: 88vh;
@@ -201,6 +232,7 @@
       gap: var(--space-md);
       animation: modalIn 0.25s cubic-bezier(.36,.76,.6,1.21);
       z-index: 2001;
+      border: 1px solid var(--border);
     }
     @keyframes modalIn {
       from { transform: translateY(32px) scale(0.97); opacity: 0; }
@@ -225,12 +257,19 @@
       width: 100%;
       font-size: 1.04rem;
       border-radius: 0.7rem;
-      border: 1px solid #b5bfff;
+      border: 1px solid var(--border);
       padding: 0.6rem 0.9rem;
       margin-top: 0.2rem;
-      background: #f6f8ff;
+      background: var(--input-bg);
+      color: var(--text);
       resize: none;
       box-sizing: border-box;
+      transition: all 0.2s ease;
+    }
+    .modal input:focus, .modal textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(56, 82, 226, 0.1);
     }
     input, textarea {
       box-sizing: border-box;
@@ -376,6 +415,35 @@
     .hidden { display: none; }
     .overflow-hidden { overflow: hidden; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast notification styles */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      z-index: 3000;
+      transition: transform 0.3s ease;
+      max-width: 90vw;
+      text-align: center;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.success {
+      background: var(--success-color);
+      color: white;
+    }
+    .toast.error {
+      background: var(--error-color);
+      color: white;
+    }
     /* Sticky topbar helpers */
     .topbar.hide { transform: translateY(-100%); }
     /* Touch-friendly hit areas */
@@ -634,6 +702,9 @@
     <div class="topbar-actions">
       <input id="searchInput" class="search-input" type="search" placeholder="Search..." />
       <button id="installBtn" class="install-btn" style="display:none;">Install</button>
+      <button id="darkModeBtn" aria-label="Toggle dark mode" class="settings-btn" title="Toggle dark mode">
+        <span class="dark-mode-icon">🌙</span>
+      </button>
       <button id="savedBtn" aria-label="Saved">⭐</button>
       <button id="settingsBtn" aria-label="Settings" class="settings-btn">
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -817,14 +888,50 @@
         };
       }
 
+      // Toast notification system
+      function showToast(message, type = 'info', duration = 3000) {
+        // Remove existing toast
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) {
+          existingToast.remove();
+        }
+
+        // Create new toast
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        // Show toast
+        setTimeout(() => toast.classList.add('show'), 100);
+
+        // Hide and remove toast
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      }
+
       // Initialize model and API key input
+      const levelSelect = document.getElementById('levelSelect');
       modelSelect.value = selectedModel;
       lang1.value = fromLang;
       lang2.value = toLang;
+      levelSelect.value = selectedLevel;
 
       modelSelect.onchange = () => {
         selectedModel = modelSelect.value;
         localStorage.setItem('geminiModel', selectedModel);
+      };
+
+      levelSelect.onchange = () => {
+        selectedLevel = levelSelect.value;
+        localStorage.setItem('selectedLevel', selectedLevel);
+        // Regenerate cards with new difficulty
+        if (currentView === 'all') {
+          vocabData = []; // Clear existing data
+          generateVocabDataWithAI();
+        }
       };
 
       function showPlaceholders(count = CARDS_BATCH_SIZE) {
@@ -919,20 +1026,20 @@
         card.innerHTML = `
           <div class="word-row">
             <span>${word[fromLang]}</span>
-            <button class="pronounce-btn" data-word="${pronWord}" data-lang="${pronLang}" title="Pronounce">
+            <button class="pronounce-btn" data-word="${pronWord}" data-lang="${pronLang}" title="Pronounce ${word[fromLang]}" aria-label="Pronounce ${word[fromLang]}">
               🔊
             </button>
           </div>
-          <div style="font-size:1rem;color:#3852e2;">
+          <div style="font-size:1rem;color:var(--primary);">
             ${word[toLang]}
           </div>
-            <div style="font-size:0.98rem;color:#444;display:flex;align-items:center;gap:0.5rem;">
+            <div style="font-size:0.98rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem;">
             <b>Example:</b> ${word[fromLang + '_example']}
-              <button class="tts-btn" data-sentence="${word[fromLang + '_example'].replace(/"/g, '&quot;')}" data-lang="${fromLang === 'en' ? 'en-US' : 'zh-CN'}" title="Read example" style="background:#e4eafd;border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;">🔊</button>
-              <button class="save-btn" title="Save word" style="background:none;border:none;font-size:1.1rem;cursor:pointer;">★</button>
+              <button class="tts-btn" data-sentence="${word[fromLang + '_example'].replace(/"/g, '&quot;')}" data-lang="${fromLang === 'en' ? 'en-US' : 'zh-CN'}" title="Read example sentence" aria-label="Read example sentence" style="background:var(--primary-light);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all 0.2s ease;">🔊</button>
+              <button class="save-btn" title="Save word to favorites" aria-label="Save ${word[fromLang]} to favorites" style="background:none;border:none;font-size:1.1rem;cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;">★</button>
           </div>
-            <span class="card-chevron">&#8594;</span>
-            <span class="difficulty-chip">${levelColor}</span>
+            <span class="card-chevron" aria-hidden="true">&#8594;</span>
+            <span class="difficulty-chip" aria-label="Difficulty: ${selectedLevel}" title="Difficulty: ${selectedLevel}">${levelColor}</span>
         `;
         // Pronunciation button
         card.querySelector('.pronounce-btn').onclick = (e) => {
@@ -944,9 +1051,20 @@
           e.stopPropagation();
             speakWord(e.currentTarget.dataset.sentence, e.currentTarget.dataset.lang);
         };
-          card.querySelector('.save-btn').onclick = (e)=>{e.stopPropagation(); saveWord(word); alert('Saved!');};
+          card.querySelector('.save-btn').onclick = (e)=>{e.stopPropagation(); saveWord(word); showToast('Word saved!', 'success');};
         card.onclick = () => openModal(word, idx);
-          card.tabIndex = 0;
+        card.tabIndex = 0;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Vocabulary card: ${word[fromLang]} means ${word[toLang]}. Press Enter to view details.`);
+
+        // Add keyboard navigation
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openModal(word, idx);
+          }
+        });
+
         cardList.appendChild(card);
         });
         // If more cards to load, add a sentinel div for scroll detection
@@ -979,10 +1097,10 @@
             <div style="font-size:1rem;color:#3852e2;">
               ${word[toLang]}
             </div>
-            <div style="font-size:0.98rem;color:#444;display:flex;align-items:center;gap:0.5rem;">
+            <div style="font-size:0.98rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.5rem;">
               <b>Example:</b> ${word[fromLang + '_example']}
-              <button class="tts-btn" data-sentence="${word[fromLang + '_example'].replace(/"/g, '&quot;')}" data-lang="${fromLang === 'en' ? 'en-US' : 'zh-CN'}" title="Read example" style="background:#e4eafd;border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;">🔊</button>
-              <button class="remove-btn" title="Remove word" style="background:none;border:none;font-size:1.1rem;cursor:pointer;">✖</button>
+              <button class="tts-btn" data-sentence="${word[fromLang + '_example'].replace(/"/g, '&quot;')}" data-lang="${fromLang === 'en' ? 'en-US' : 'zh-CN'}" title="Read example" style="background:var(--primary-light);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all 0.2s ease;">🔊</button>
+              <button class="remove-btn" title="Remove word" style="background:none;border:none;font-size:1.1rem;cursor:pointer;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;color:var(--error-color);">✖</button>
             </div>
             <span class="card-chevron">&#8594;</span>
             <span class="difficulty-chip">${levelColor}</span>
@@ -995,21 +1113,7 @@
         });
       }
 
-      // Infinite scroll logic
-      function onCardListScroll() {
-        const sentinel = document.getElementById('cardSentinel');
-        if (!sentinel) return;
-        const rect = sentinel.getBoundingClientRect();
-        if (rect.top < window.innerHeight + 100) {
-          // Load more cards
-          if (cardsToShow < filterData(vocabData).length) {
-            cardsToShow += CARDS_BATCH_SIZE;
-            renderCards();
-          }
-        }
-      }
-      cardList.addEventListener('scroll', onCardListScroll);
-      window.addEventListener('scroll', onCardListScroll); // for mobile/viewport scrolling
+      // Infinite scroll logic - removed duplicate listeners, using IntersectionObserver instead
 
       // Build a language->voices map
       const voiceMap = {}; // { en:[voices], zh:[voices] }
@@ -1352,8 +1456,23 @@
         const loaderEl = document.getElementById('loader');
         loaderEl.classList.remove('hidden');
         if (!append) showPlaceholders();
-        // Compose prompt for Gemini
-        const prompt = `Generate a list of 10 English words with their Chinese translations, IPA pronunciations, definitions, and example sentences in both languages. Format as a JSON array with keys: en, zh, en_pron, zh_pron, en_def, zh_def, en_example, zh_example.`;
+
+        // Create difficulty-specific prompt
+        const difficultyInstructions = {
+          easy: 'Use common, everyday words that beginners would encounter (1000-2000 most frequent words).',
+          medium: 'Use intermediate vocabulary including some academic and professional terms (2000-5000 most frequent words).',
+          hard: 'Use advanced vocabulary including technical, literary, and specialized terms (5000+ frequency range).'
+        };
+
+        // Compose prompt for Gemini with difficulty level
+        const prompt = `Generate a list of 10 English words with their Chinese translations, IPA pronunciations, definitions, and example sentences in both languages.
+
+Difficulty level: ${selectedLevel.toUpperCase()}
+${difficultyInstructions[selectedLevel]}
+
+Format as a JSON array with keys: en, zh, en_pron, zh_pron, en_def, zh_def, en_example, zh_example.
+
+Make sure the words match the specified difficulty level and include varied topics like daily life, work, hobbies, and culture.`;
         try {
           const session = await startChatSession(selectedModel, '__vocabgen__');
           const result = await session.sendMessage(prompt);
@@ -1386,7 +1505,8 @@
           throw new Error('Could not parse vocab list from AI response.');
         } catch (err) {
           loaderEl.classList.add('hidden');
-          cardList.innerHTML = `<div style=\"padding:2rem;text-align:center;color:#c00;\">Failed to load vocabulary from AI.<br>${err.message || err}</div>`;
+          cardList.innerHTML = `<div style=\"padding:2rem;text-align:center;color:var(--error-color);\">Failed to load vocabulary from AI.<br>${err.message || err}<br><button onclick=\"generateVocabDataWithAI()\" style=\"margin-top:1rem;padding:0.5rem 1rem;background:var(--primary);color:white;border:none;border-radius:0.5rem;cursor:pointer;\">Try Again</button></div>`;
+          showToast('Failed to load vocabulary. Please try again.', 'error');
         }
       }
 
@@ -1540,6 +1660,54 @@
       settingsModalBg.addEventListener('click', (e) => {
         if (e.target === settingsModalBg) closeSettingsModal();
       });
+
+      // Dark mode toggle functionality
+      const darkModeBtn = document.getElementById('darkModeBtn');
+      const darkModeIcon = darkModeBtn.querySelector('.dark-mode-icon');
+
+      // Initialize dark mode from localStorage or system preference
+      function initializeDarkMode() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const shouldUseDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+
+        if (shouldUseDark) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          darkModeIcon.textContent = '☀️';
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          darkModeIcon.textContent = '🌙';
+        }
+      }
+
+      // Toggle dark mode
+      darkModeBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+
+        darkModeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+
+        // Add a subtle animation
+        darkModeBtn.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          darkModeBtn.style.transform = 'scale(1)';
+        }, 150);
+      });
+
+      // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          darkModeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        }
+      });
+
+      // Initialize dark mode on page load
+      initializeDarkMode();
 
       const topbar = document.getElementById('topbar');
       let lastScrollY = window.scrollY;
