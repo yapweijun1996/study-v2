@@ -240,13 +240,34 @@
     }
     .modal .close-btn {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(56, 82, 226, 0.1);
       border: none;
-      font-size: 1.4rem;
-      color: #3852e2;
+      border-radius: 50%;
+      width: 2.75rem;
+      height: 2.75rem;
+      font-size: 1.5rem;
+      color: var(--primary);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 10;
+      line-height: 1;
+      font-weight: 300;
+    }
+    .modal .close-btn:hover,
+    .modal .close-btn:focus {
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
+      outline: none;
+      box-shadow: 0 2px 8px rgba(56, 82, 226, 0.3);
+    }
+    .modal .close-btn:active {
+      transform: scale(0.95);
     }
     .modal label {
       font-weight: 500;
@@ -292,8 +313,86 @@
       margin-top: 0.5rem;
       align-self: flex-end;
     }
+    /* Load More Examples Button Styling */
+    .load-examples-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, #4c63d2 100%);
+      color: white;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(56, 82, 226, 0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .load-examples-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(56, 82, 226, 0.3);
+      background: linear-gradient(135deg, #4c63d2 0%, var(--primary) 100%);
+    }
+    .load-examples-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(56, 82, 226, 0.2);
+    }
+    .load-examples-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .load-examples-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(56, 82, 226, 0.3);
+    }
+
+    /* Enhanced container spacing for mobile */
+    .container {
+      padding-top: calc(var(--header-h) + 1rem);
+    }
+
+    /* Improved card spacing on mobile */
+    @media (max-width: 768px) {
+      .card-list {
+        gap: 1rem;
+        padding: 0 0.5rem;
+      }
+      .container {
+        padding-top: calc(var(--header-h) + 0.5rem);
+      }
+    }
+    /* Modal Mobile Responsiveness */
     @media (max-width: 600px) {
-      .container { margin: 1rem 0; }
+      .container {
+        margin: 1rem 0;
+        padding-top: calc(var(--header-h) + 1rem);
+      }
+      .modal {
+        width: 95vw;
+        max-width: 95vw;
+        margin: 0.5rem;
+        padding: 2.5rem 1rem 1rem 1rem;
+        max-height: 90vh;
+      }
+      .modal .close-btn {
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.4rem;
+      }
+      .load-examples-btn {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+      }
       .header {
         flex-direction: column;
         align-items: stretch;
@@ -421,8 +520,23 @@
     }
     /* Sticky topbar helpers */
     .topbar.hide { transform: translateY(-100%); }
-    /* Touch-friendly hit areas */
-    .ai-toolbar button, .topbar button, .card button { min-width: 44px; min-height: 44px; }
+    /* Touch-friendly hit areas and improved interactions */
+    .ai-toolbar button, .topbar button, .card button {
+      min-width: 44px;
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+
+    /* Improved button focus states for accessibility */
+    button:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    /* Better tap highlighting for mobile */
+    * {
+      -webkit-tap-highlight-color: rgba(56, 82, 226, 0.2);
+    }
 
     /* Marked.js markdown output for .ai-reply */
     .ai-reply h1,
@@ -482,6 +596,18 @@
       padding: 0.3rem 0.8rem;
       font-size: 1rem;
       cursor: pointer;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .install-btn:hover,
+    .install-btn:focus {
+      background: #4c63d2;
+      transform: translateY(-1px);
+      outline: none;
     }
     .settings-btn {
       background: none;
@@ -491,12 +617,21 @@
       padding: 0.4rem;
       font-size: 1.5rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .settings-btn:hover,
     .settings-btn:focus {
-      background: #e4eafd;
+      background: rgba(56, 82, 226, 0.1);
+      transform: scale(1.05);
       outline: none;
+    }
+    .settings-btn:active {
+      transform: scale(0.95);
     }
 
     .menu-btn {
@@ -515,26 +650,106 @@
       background: #e4eafd;
       outline: none;
     }
-    /* Responsive: show hamburger on mobile */
-    @media (max-width: 800px) {
-      .menu-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
+    /* Enhanced Mobile Header Responsiveness */
+    @media (max-width: 768px) {
       .topbar {
         padding: 0 1rem;
+        height: 60px;
+        --header-h: 60px;
       }
       .topbar-title {
         font-size: 1.1rem;
       }
+      .topbar-actions {
+        gap: 0.75rem;
+      }
+      .topbar-actions button {
+        min-width: 44px;
+        min-height: 44px;
+        padding: 0.5rem;
+      }
+      .settings-btn {
+        padding: 0.5rem !important;
+      }
     }
+
     @media (max-width: 500px) {
       .topbar {
-        padding: 0 0.5rem;
+        padding: 0 0.75rem;
+        height: 56px;
+        --header-h: 56px;
+      }
+      .topbar-left {
+        gap: 0.5rem;
+        flex: 1;
+        min-width: 0;
+      }
+      .topbar-logo {
+        font-size: 1.5rem;
       }
       .topbar-title {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .topbar-actions {
+        gap: 0.5rem;
+        flex-shrink: 0;
+      }
+      .topbar-actions button {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 0.4rem;
+        font-size: 0.9rem;
+      }
+      .settings-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    @media (max-width: 375px) {
+      .topbar {
+        padding: 0 0.5rem;
+        height: 52px;
+        --header-h: 52px;
+      }
+      .topbar-logo {
+        font-size: 1.3rem;
+      }
+      .topbar-title {
+        font-size: 0.9rem;
+      }
+      .topbar-actions {
+        gap: 0.25rem;
+      }
+      .topbar-actions button {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0.3rem;
+        font-size: 0.85rem;
+      }
+      .settings-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .dark-mode-icon {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .topbar {
+        padding: 0 0.25rem;
+      }
+      .topbar-title {
+        font-size: 0.85rem;
+      }
+      .topbar-actions button {
+        min-width: 32px;
+        min-height: 32px;
+        padding: 0.25rem;
       }
     }
     /* Settings Modal Styles */
@@ -595,33 +810,48 @@
     }
     .settings-modal .close-btn {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: rgba(56, 82, 226, 0.1);
       border: none;
       font-size: 1.5rem;
-      color: #3852e2;
+      color: var(--primary);
       cursor: pointer;
       border-radius: 50%;
-      width: 2.5rem;
-      height: 2.5rem;
+      width: 2.75rem;
+      height: 2.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
+      z-index: 10;
+      line-height: 1;
+      font-weight: 300;
     }
     .settings-modal .close-btn:hover,
     .settings-modal .close-btn:focus {
-      background: #e4eafd;
+      background: var(--primary);
+      color: white;
+      transform: scale(1.05);
       outline: none;
+      box-shadow: 0 2px 8px rgba(56, 82, 226, 0.3);
+    }
+    .settings-modal .close-btn:active {
+      transform: scale(0.95);
     }
     @media (max-width: 500px) {
       .settings-modal {
-        padding: 1.2rem 0.5rem 1rem 0.5rem;
+        padding: 2.5rem 1rem 1.5rem 1rem;
+        width: 95vw;
+        max-width: 95vw;
+        margin: 0.5rem;
       }
       .settings-modal .close-btn {
         top: 0.5rem;
         right: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.4rem;
       }
     }
   </style>
@@ -1475,7 +1705,9 @@
           <br><span style="color:#3852e2;">${word[toLang + '_def']}</span>
         </div>
           ${examplesHtml}
-          <button class="load-examples-btn" style="margin-top:var(--space-sm);">Load More Examples</button>
+          <button class="load-examples-btn" style="margin-top:var(--space-sm);">
+            <span>Load More Examples</span>
+          </button>
           <hr style="margin:var(--space-sm) 0 var(--space-xs) 0;">
           ${chatHtml}
         <label for="askAiInput">Ask AI about this word</label>
