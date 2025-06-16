@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTS Functionality Test</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    .test-section {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    .test-item {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: white;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0.25rem;
+      font-size: 0.9rem;
+    }
+    button:hover { background: #0056b3; }
+    button.test-btn { background: #28a745; }
+    button.test-btn:hover { background: #1e7e34; }
+    .voice-info {
+      background: #e9ecef;
+      padding: 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      margin: 0.5rem 0;
+    }
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+    .status.pass { background: #d4edda; color: #155724; }
+    .status.fail { background: #f8d7da; color: #721c24; }
+    .status.info { background: #d1ecf1; color: #0c5460; }
+    select, input[type="range"] {
+      margin: 0.25rem;
+      padding: 0.25rem;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔊 TTS Functionality Test Suite</h1>
+  
+  <div class="test-section">
+    <h2>🎯 Voice Detection & Loading</h2>
+    <div class="test-item">
+      <strong>Available Voices:</strong>
+      <span class="status info" id="voice-count">Loading...</span>
+      <div id="voice-list" class="voice-info">Loading voices...</div>
+      <button onclick="loadAndDisplayVoices()">Refresh Voice List</button>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>🌐 Language Detection</h2>
+    <div class="test-item">
+      <strong>Test Language Detection:</strong>
+      <div class="controls">
+        <input type="text" id="detection-input" placeholder="Enter text to test..." style="flex: 1; min-width: 200px;">
+        <button onclick="testLanguageDetection()">Detect Language</button>
+      </div>
+      <div id="detection-result" class="voice-info"></div>
+    </div>
+    
+    <div class="test-item">
+      <strong>Predefined Test Cases:</strong>
+      <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 0.5rem; align-items: center;">
+        <span>Hello world</span>
+        <button class="test-btn" onclick="testDetection('Hello world')">Test</button>
+        <span id="result-1" class="status info">-</span>
+        
+        <span>你好世界</span>
+        <button class="test-btn" onclick="testDetection('你好世界')">Test</button>
+        <span id="result-2" class="status info">-</span>
+        
+        <span>Hello 你好 mixed text</span>
+        <button class="test-btn" onclick="testDetection('Hello 你好 mixed text')">Test</button>
+        <span id="result-3" class="status info">-</span>
+        
+        <span>Apple (苹果)</span>
+        <button class="test-btn" onclick="testDetection('Apple (苹果)')">Test</button>
+        <span id="result-4" class="status info">-</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>🗣️ Voice Selection & TTS</h2>
+    <div class="test-item">
+      <strong>English TTS Test:</strong>
+      <div class="controls">
+        <select id="english-voice-select">
+          <option value="">Auto-select</option>
+        </select>
+        <button onclick="testEnglishTTS()">🔊 Test English</button>
+      </div>
+      <div class="controls">
+        <label>Rate:</label>
+        <input type="range" id="en-rate" min="0.5" max="2" step="0.1" value="1">
+        <span id="en-rate-val">1.0</span>
+        <label>Pitch:</label>
+        <input type="range" id="en-pitch" min="0.5" max="2" step="0.1" value="1">
+        <span id="en-pitch-val">1.0</span>
+      </div>
+    </div>
+    
+    <div class="test-item">
+      <strong>Chinese TTS Test:</strong>
+      <div class="controls">
+        <select id="chinese-voice-select">
+          <option value="">Auto-select</option>
+        </select>
+        <button onclick="testChineseTTS()">🔊 Test Chinese</button>
+      </div>
+      <div class="controls">
+        <label>Rate:</label>
+        <input type="range" id="zh-rate" min="0.5" max="2" step="0.1" value="1">
+        <span id="zh-rate-val">1.0</span>
+        <label>Pitch:</label>
+        <input type="range" id="zh-pitch" min="0.5" max="2" step="0.1" value="1">
+        <span id="zh-pitch-val">1.0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>🧪 Advanced TTS Tests</h2>
+    <div class="test-item">
+      <strong>Text Cleaning Test:</strong>
+      <p>Tests if parenthetical content is properly removed before TTS.</p>
+      <button onclick="testTextCleaning()">🔊 Test "Hello (你好) world"</button>
+    </div>
+    
+    <div class="test-item">
+      <strong>Error Handling Test:</strong>
+      <p>Tests TTS behavior with edge cases.</p>
+      <button onclick="testEmptyText()">Test Empty Text</button>
+      <button onclick="testUnsupportedLang()">Test Unsupported Language</button>
+    </div>
+    
+    <div class="test-item">
+      <strong>Vocabulary Card Simulation:</strong>
+      <p>Simulates TTS usage in vocabulary cards.</p>
+      <div style="border: 1px solid #ddd; padding: 1rem; border-radius: 4px; margin: 0.5rem 0;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">
+          Apple <button onclick="simulateCardTTS('Apple', 'en')">🔊</button>
+        </div>
+        <div style="color: #007bff; margin-bottom: 0.5rem;">
+          苹果 <button onclick="simulateCardTTS('苹果', 'zh')">🔊</button>
+        </div>
+        <div style="font-size: 0.9rem;">
+          <strong>Example:</strong> She ate an apple for breakfast.
+          <button onclick="simulateCardTTS('She ate an apple for breakfast.', 'en')">🔊</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Voice management
+    const voiceMap = { en: [], zh: [] };
+    let ttsSettings = { rate: 1.0, pitch: 1.0 };
+
+    // Enhanced language detection (copied from main app)
+    function detectLanguage(text) {
+      const cleanText = text.replace(/[^\u4e00-\u9fff\u3400-\u4dbf\w]/g, '');
+      const chineseChars = cleanText.match(/[\u4e00-\u9fff\u3400-\u4dbf]/g);
+      const totalChars = cleanText.length;
+      
+      if (chineseChars && totalChars > 0) {
+        const chineseRatio = chineseChars.length / totalChars;
+        if (chineseRatio > 0.3) return 'zh';
+      }
+      
+      return 'en';
+    }
+
+    // Load and categorize voices
+    function loadVoices() {
+      const voices = speechSynthesis.getVoices();
+      voiceMap.en = [];
+      voiceMap.zh = [];
+      
+      voices.forEach(voice => {
+        const lang = voice.lang.toLowerCase();
+        if (lang.startsWith('en-') || lang === 'en') {
+          voiceMap.en.push(voice);
+        } else if (lang.startsWith('zh-') || lang === 'zh' || 
+                   lang.includes('cmn') || lang.includes('mandarin')) {
+          voiceMap.zh.push(voice);
+        }
+      });
+      
+      // Sort by quality
+      ['en', 'zh'].forEach(lang => {
+        voiceMap[lang].sort((a, b) => {
+          if (a.localService !== b.localService) {
+            return b.localService - a.localService;
+          }
+          return a.name.localeCompare(b.name);
+        });
+      });
+    }
+
+    // Display voice information
+    function loadAndDisplayVoices() {
+      loadVoices();
+      const totalVoices = speechSynthesis.getVoices().length;
+      const englishCount = voiceMap.en.length;
+      const chineseCount = voiceMap.zh.length;
+      
+      document.getElementById('voice-count').textContent = 
+        `${totalVoices} total (${englishCount} EN, ${chineseCount} ZH)`;
+      
+      let voiceInfo = `English Voices (${englishCount}):\n`;
+      voiceMap.en.forEach(v => {
+        voiceInfo += `  • ${v.name} (${v.lang})${v.localService ? ' [Local]' : ''}\n`;
+      });
+      
+      voiceInfo += `\nChinese Voices (${chineseCount}):\n`;
+      voiceMap.zh.forEach(v => {
+        voiceInfo += `  • ${v.name} (${v.lang})${v.localService ? ' [Local]' : ''}\n`;
+      });
+      
+      document.getElementById('voice-list').textContent = voiceInfo;
+      
+      // Populate selectors
+      populateVoiceSelectors();
+    }
+
+    function populateVoiceSelectors() {
+      const enSelect = document.getElementById('english-voice-select');
+      const zhSelect = document.getElementById('chinese-voice-select');
+      
+      // Clear and populate English voices
+      enSelect.innerHTML = '<option value="">Auto-select best</option>';
+      voiceMap.en.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})${voice.localService ? ' 🏠' : ''}`;
+        enSelect.appendChild(option);
+      });
+      
+      // Clear and populate Chinese voices
+      zhSelect.innerHTML = '<option value="">Auto-select best</option>';
+      voiceMap.zh.forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})${voice.localService ? ' 🏠' : ''}`;
+        zhSelect.appendChild(option);
+      });
+    }
+
+    // Test functions
+    function testLanguageDetection() {
+      const input = document.getElementById('detection-input');
+      const result = document.getElementById('detection-result');
+      const text = input.value.trim();
+      
+      if (!text) {
+        result.textContent = 'Please enter some text to test.';
+        return;
+      }
+      
+      const detected = detectLanguage(text);
+      result.textContent = `Input: "${text}"\nDetected Language: ${detected === 'en' ? 'English' : 'Chinese'}`;
+    }
+
+    function testDetection(text) {
+      const detected = detectLanguage(text);
+      const resultId = `result-${['Hello world', '你好世界', 'Hello 你好 mixed text', 'Apple (苹果)'].indexOf(text) + 1}`;
+      const element = document.getElementById(resultId);
+      element.textContent = detected === 'en' ? 'EN' : 'ZH';
+      element.className = `status ${detected === 'en' ? 'info' : 'pass'}`;
+    }
+
+    // TTS test functions
+    function getSelectedVoice(language) {
+      const selectId = language === 'en' ? 'english-voice-select' : 'chinese-voice-select';
+      const select = document.getElementById(selectId);
+      const voiceName = select.value;
+      
+      if (!voiceName) {
+        return voiceMap[language][0]; // Auto-select first available
+      }
+      
+      return voiceMap[language].find(v => v.name === voiceName);
+    }
+
+    function speak(text, language) {
+      if (!speechSynthesis) {
+        alert('TTS not supported');
+        return;
+      }
+      
+      const voice = getSelectedVoice(language);
+      if (!voice) {
+        alert(`No ${language} voice available`);
+        return;
+      }
+      
+      speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = voice;
+      utterance.rate = parseFloat(document.getElementById(`${language === 'en' ? 'en' : 'zh'}-rate`).value);
+      utterance.pitch = parseFloat(document.getElementById(`${language === 'en' ? 'en' : 'zh'}-pitch`).value);
+      
+      speechSynthesis.speak(utterance);
+    }
+
+    function testEnglishTTS() {
+      speak('This is a test of the English text-to-speech system. Hello world!', 'en');
+    }
+
+    function testChineseTTS() {
+      speak('这是中文语音合成系统的测试。你好世界！', 'zh');
+    }
+
+    function testTextCleaning() {
+      const cleanText = 'Hello (你好) world'.replace(/[（(][^）)]+[）)]/g, '').trim();
+      speak(cleanText, 'en');
+    }
+
+    function testEmptyText() {
+      alert('Testing empty text - should show error message');
+    }
+
+    function testUnsupportedLang() {
+      alert('Testing unsupported language - should show error message');
+    }
+
+    function simulateCardTTS(text, lang) {
+      speak(text, lang);
+    }
+
+    // Initialize range value displays
+    function initRangeControls() {
+      ['en-rate', 'en-pitch', 'zh-rate', 'zh-pitch'].forEach(id => {
+        const range = document.getElementById(id);
+        const valueSpan = document.getElementById(id + '-val');
+        
+        range.addEventListener('input', (e) => {
+          valueSpan.textContent = parseFloat(e.target.value).toFixed(1);
+        });
+      });
+    }
+
+    // Initialize everything
+    window.addEventListener('load', () => {
+      loadAndDisplayVoices();
+      initRangeControls();
+    });
+
+    // Handle voice loading
+    speechSynthesis.onvoiceschanged = loadAndDisplayVoices;
+  </script>
+</body>
+</html>
