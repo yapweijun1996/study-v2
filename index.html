@@ -473,12 +473,7 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .search-input {
-      padding: 0.25rem 0.5rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-    }
+
     .install-btn {
       background: var(--primary);
       color: #fff;
@@ -641,7 +636,7 @@
     </div>
 
     <div class="topbar-actions">
-      <input id="searchInput" class="search-input" type="search" placeholder="Search..." />
+
       <button id="installBtn" class="install-btn" style="display:none;">Install</button>
       <button id="darkModeBtn" aria-label="Toggle dark mode" class="settings-btn" title="Toggle dark mode">
         <span class="dark-mode-icon">🌙</span>
@@ -791,7 +786,6 @@
       let selectedModel = localStorage.getItem('geminiModel') || 'gemini-2.0-flash';
       let selectedLevel = localStorage.getItem('selectedLevel') || 'easy';
       let chatHistory = {};
-      let searchQuery = '';
 
     // Elements
     const cardList = document.getElementById('cardList');
@@ -799,7 +793,6 @@
     const lang2 = document.getElementById('lang2');
     const modalBg = document.getElementById('modalBg');
     const modalContent = document.getElementById('modalContent');
-    const searchInput = document.getElementById('searchInput');
     const modelSelect = document.getElementById('modelSelect');
 
       // Saved words helpers
@@ -904,13 +897,7 @@
         }
       }
 
-      function filterData(list) {
-        if (!searchQuery.trim()) return list;
-        const q = searchQuery.toLowerCase();
-        return list.filter(w =>
-          w.en.toLowerCase().includes(q) || w.zh.includes(searchQuery)
-        );
-      }
+
 
       // Gemini API config
       const generationConfig = {
@@ -969,8 +956,7 @@
           cardList.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">Please select different languages.</div>';
           return;
         }
-        const filtered = filterData(vocabData);
-        const toRender = filtered.slice(0, cardsToShow);
+        const toRender = vocabData.slice(0, cardsToShow);
         toRender.forEach((word, idx) => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -1024,7 +1010,7 @@
         cardList.appendChild(card);
         });
         // If more cards to load, add a sentinel div for scroll detection
-      if (cardsToShow < filtered.length) {
+      if (cardsToShow < vocabData.length) {
         let sentinel = document.createElement('div');
         sentinel.id = 'cardSentinel';
         sentinel.style.height = '32px';
@@ -1033,7 +1019,7 @@
     }
 
       function renderSavedWords() {
-        const saved = filterData(getSavedWords());
+        const saved = getSavedWords();
         cardList.innerHTML = '';
         if (saved.length === 0) {
           cardList.innerHTML = '<div style="padding:2rem;text-align:center;color:#888;">No saved words.</div>';
@@ -1740,15 +1726,7 @@ Make sure the words match the specified difficulty level and include varied topi
         showSavedView();
       });
 
-      const onSearch = debounce(() => {
-        searchQuery = searchInput.value;
-        if (currentView === 'saved') {
-          renderSavedWords();
-        } else {
-          renderCards(true);
-        }
-      }, 300);
-      searchInput.addEventListener('input', onSearch);
+
 
       // Settings Modal logic
       const settingsModalBg = document.getElementById('settingsModalBg');
